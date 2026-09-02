@@ -9,107 +9,129 @@ public class BST {
 
         Node(Patient patient) {
             this.patient = patient;
+            this.left = null;
+            this.right = null;
         }
     }
 
     private Node root;
-}
 
-public void insert(Patient patient) {
-    root = insertRecursive(root, patient);
-}
-
-private Node insertRecursive(Node current, Patient patient) {
-
-    if (current == null) {
-        return new Node(patient);
+    // Insert patient
+    public void insert(Patient patient) {
+        root = insertRecursive(root, patient);
     }
 
-    if (patient.getPatientId() < current.patient.getPatientId()) {
-        current.left = insertRecursive(current.left, patient);
-    } else if (patient.getPatientId() > current.patient.getPatientId()) {
-        current.right = insertRecursive(current.right, patient);
-    }
+    private Node insertRecursive(Node current, Patient patient) {
 
-    return current;
-}
-
-public Patient search(int patientId) {
-
-    Node current = root;
-
-    while (current != null) {
-
-        if (patientId == current.patient.getPatientId()) {
-            return current.patient;
+        if (current == null) {
+            return new Node(patient);
         }
 
-        if (patientId < current.patient.getPatientId()) {
-            current = current.left;
-        } else {
-            current = current.right;
+        if (patient.getPatientId() < current.patient.getPatientId()) {
+
+            current.left = insertRecursive(current.left, patient);
+
+        } else if (patient.getPatientId() > current.patient.getPatientId()) {
+
+            current.right = insertRecursive(current.right, patient);
+
         }
+
+        return current;
     }
 
-    return null;
-}
+    // Search patient
+    public Patient search(int patientId) {
 
-public void delete(int patientId) {
-    root = deleteRecursive(root, patientId);
-}
+        Node current = root;
 
-private Node deleteRecursive(Node current, int patientId) {
+        while (current != null) {
 
-    if (current == null) {
+            if (patientId == current.patient.getPatientId()) {
+                return current.patient;
+            }
+
+            if (patientId < current.patient.getPatientId()) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+        }
+
         return null;
     }
 
-    if (patientId < current.patient.getPatientId()) {
-        current.left = deleteRecursive(current.left, patientId);
-
-    } else if (patientId > current.patient.getPatientId()) {
-        current.right = deleteRecursive(current.right, patientId);
-
-    } else {
-
-        if (current.left == null) {
-            return current.right;
-        }
-
-        if (current.right == null) {
-            return current.left;
-        }
-
-        Node successor = findMinimum(current.right);
-        current.patient = successor.patient;
-        current.right = deleteRecursive(
-                current.right,
-                successor.patient.getPatientId()
-        );
+    // Delete patient
+    public void delete(int patientId) {
+        root = deleteRecursive(root, patientId);
     }
 
-    return current;
-}
+    private Node deleteRecursive(Node current, int patientId) {
 
-private Node findMinimum(Node current) {
+        if (current == null) {
+            return null;
+        }
 
-    while (current.left != null) {
-        current = current.left;
+        if (patientId < current.patient.getPatientId()) {
+
+            current.left = deleteRecursive(current.left, patientId);
+
+        } else if (patientId > current.patient.getPatientId()) {
+
+            current.right = deleteRecursive(current.right, patientId);
+
+        } else {
+
+            // Case 1: No left child
+            if (current.left == null) {
+                return current.right;
+            }
+
+            // Case 2: No right child
+            if (current.right == null) {
+                return current.left;
+            }
+
+            // Case 3: Two children
+            Node successor = findMinimum(current.right);
+
+            current.patient = successor.patient;
+
+            current.right = deleteRecursive(
+                    current.right,
+                    successor.patient.getPatientId()
+            );
+        }
+
+        return current;
     }
 
-    return current;
-}
+    // Find smallest node
+    private Node findMinimum(Node current) {
 
-public void displayInOrder() {
-    inOrder(root);
-}
+        while (current.left != null) {
+            current = current.left;
+        }
 
-private void inOrder(Node current) {
+        return current;
+    }
 
-    if (current != null) {
-        inOrder(current.left);
-        current.patient.display();
-        System.out.println("----------------------");
-        inOrder(current.right);
+    // Display patients in sorted order
+    public void displayInOrder() {
+        inOrder(root);
+    }
+
+    private void inOrder(Node current) {
+
+        if (current != null) {
+
+            inOrder(current.left);
+
+            current.patient.display();
+
+            System.out.println("----------------------");
+
+            inOrder(current.right);
+        }
     }
 }
