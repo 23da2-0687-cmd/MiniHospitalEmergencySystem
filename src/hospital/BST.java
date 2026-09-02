@@ -18,10 +18,9 @@ public class BST {
 
     private Node root;
 
-    // =========================
+    
     // INSERT PATIENT
-    // =========================
-
+   
     public void insert(Patient patient) {
 
         if (root == null) {
@@ -135,9 +134,9 @@ public class BST {
         return current;
     }
 
-    // =========================
+    
     // FIND MINIMUM
-    // =========================
+   
 
     private Node findMinimum(Node current) {
 
@@ -148,10 +147,10 @@ public class BST {
         return current;
     }
 
-    // =========================
+   
     // DISPLAY ALL PATIENTS
     // IN-ORDER TRAVERSAL
-    // =========================
+   
 
     public void displayInOrder() {
 
