@@ -2,7 +2,9 @@ package hospital;
 
 public class BST {
 
+    // Node class
     private class Node {
+
         Patient patient;
         Node left;
         Node right;
@@ -16,31 +18,48 @@ public class BST {
 
     private Node root;
 
-    // Insert patient
+    // =========================
+    // INSERT PATIENT
+    // =========================
+
     public void insert(Patient patient) {
-        root = insertRecursive(root, patient);
+
+        if (root == null) {
+            root = new Node(patient);
+            return;
+        }
+
+        insertRecursive(root, patient);
     }
 
-    private Node insertRecursive(Node current, Patient patient) {
-
-        if (current == null) {
-            return new Node(patient);
-        }
+    private void insertRecursive(Node current, Patient patient) {
 
         if (patient.getPatientId() < current.patient.getPatientId()) {
 
-            current.left = insertRecursive(current.left, patient);
+            if (current.left == null) {
+                current.left = new Node(patient);
+            } else {
+                insertRecursive(current.left, patient);
+            }
 
         } else if (patient.getPatientId() > current.patient.getPatientId()) {
 
-            current.right = insertRecursive(current.right, patient);
+            if (current.right == null) {
+                current.right = new Node(patient);
+            } else {
+                insertRecursive(current.right, patient);
+            }
 
+        } else {
+
+            System.out.println("Patient ID already exists.");
         }
-
-        return current;
     }
 
-    // Search patient
+    // =========================
+    // SEARCH PATIENT
+    // =========================
+
     public Patient search(int patientId) {
 
         Node current = root;
@@ -61,8 +80,12 @@ public class BST {
         return null;
     }
 
-    // Delete patient
+    // =========================
+    // DELETE PATIENT
+    // =========================
+
     public void delete(int patientId) {
+
         root = deleteRecursive(root, patientId);
     }
 
@@ -74,25 +97,31 @@ public class BST {
 
         if (patientId < current.patient.getPatientId()) {
 
-            current.left = deleteRecursive(current.left, patientId);
+            current.left = deleteRecursive(
+                    current.left,
+                    patientId
+            );
 
         } else if (patientId > current.patient.getPatientId()) {
 
-            current.right = deleteRecursive(current.right, patientId);
+            current.right = deleteRecursive(
+                    current.right,
+                    patientId
+            );
 
         } else {
 
-            // Case 1: No left child
+            // No left child
             if (current.left == null) {
                 return current.right;
             }
 
-            // Case 2: No right child
+            // No right child
             if (current.right == null) {
                 return current.left;
             }
 
-            // Case 3: Two children
+            // Two children
             Node successor = findMinimum(current.right);
 
             current.patient = successor.patient;
@@ -106,7 +135,10 @@ public class BST {
         return current;
     }
 
-    // Find smallest node
+    // =========================
+    // FIND MINIMUM
+    // =========================
+
     private Node findMinimum(Node current) {
 
         while (current.left != null) {
@@ -116,22 +148,38 @@ public class BST {
         return current;
     }
 
-    // Display patients in sorted order
+    // =========================
+    // DISPLAY ALL PATIENTS
+    // IN-ORDER TRAVERSAL
+    // =========================
+
     public void displayInOrder() {
+
+        if (root == null) {
+            System.out.println("No patients registered.");
+            return;
+        }
+
+        System.out.println("\n===== PATIENT RECORDS =====");
+
         inOrder(root);
     }
 
     private void inOrder(Node current) {
 
-        if (current != null) {
-
-            inOrder(current.left);
-
-            current.patient.display();
-
-            System.out.println("----------------------");
-
-            inOrder(current.right);
+        if (current == null) {
+            return;
         }
+
+        // Left
+        inOrder(current.left);
+
+        // Root
+        current.patient.display();
+
+        System.out.println("----------------------------");
+
+        // Right
+        inOrder(current.right);
     }
 }
